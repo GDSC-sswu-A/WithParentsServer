@@ -9,4 +9,7 @@ public class PropertyConfig {
     @Value("${jwtkey}")
     private String jwtkey;
 
+    public String getJwtkey() {
+        return jwtkey;
+    }
 }
