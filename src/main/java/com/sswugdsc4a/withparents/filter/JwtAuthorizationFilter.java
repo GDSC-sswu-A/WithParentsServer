@@ -46,7 +46,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             }
 
             // jwt 토큰에서 user_id 가져오기
-            Long userId = (Long) Jwts.parserBuilder()
+            String userId = (String) Jwts.parserBuilder()
                     .setSigningKey(Keys.hmacShaKeyFor(propertyConfig.getJwtkey().getBytes(StandardCharsets.UTF_8)))
                     .build()
                     .parseClaimsJws(token)
@@ -54,10 +54,10 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     .get("user_id");
 
             // userId로 user 객체 얻기
-            Optional<User> user = userRepository.findById(userId);
+            Optional<User> user = userRepository.findByEmail(userId);
 
             if (user.isEmpty()) {
-                throw new InvalidIdException(userId, "user");
+                throw new InvalidValueException(userId, "userId");
             }
 
             // Authenticaton 생성하고 SecurityContext에 설정하기
