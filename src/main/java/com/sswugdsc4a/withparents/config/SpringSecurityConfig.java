@@ -1,5 +1,7 @@
 package com.sswugdsc4a.withparents.config;
 
+import com.sswugdsc4a.withparents.filter.JwtAuthorizationFilter;
+import com.sswugdsc4a.withparents.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.autoconfigure.security.ConditionalOnDefaultWebSecurity;
@@ -21,6 +23,9 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @Configuration
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final PropertyConfig propertyConfig;
+    private final UserRepository userRepository;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
@@ -31,11 +36,11 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         // 비연결상태 설정
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-//        // jwt 필터 추가
-//        http.addFilterAfter(
-//                new JwtAuthorizationFilter(userRepository, propertyConfig),
-//                BasicAuthenticationFilter.class
-//        );
+        // jwt 필터 추가
+        http.addFilterAfter(
+                new JwtAuthorizationFilter(userRepository, propertyConfig),
+                BasicAuthenticationFilter.class
+        );
 
         // 접근권한 설정
         http.authorizeRequests().antMatchers(
