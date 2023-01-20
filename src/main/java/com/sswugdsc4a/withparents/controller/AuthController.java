@@ -1,12 +1,13 @@
 package com.sswugdsc4a.withparents.controller;
 
+import com.sswugdsc4a.withparents.dto.Request.GoogleLoginRequest;
+import com.sswugdsc4a.withparents.dto.response.GoogleLoginResponse;
 import com.sswugdsc4a.withparents.service.AuthService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,4 +28,12 @@ public class AuthController {
     ) {
         return "success";
     }
+
+    @PostMapping("/api/auth/googleLogin")
+    public GoogleLoginResponse googleLogin(
+            @RequestBody GoogleLoginRequest body
+    ) throws GeneralSecurityException, IOException {
+        return authService.googleLogin(body.getAccess_token());
+    }
+
 }
