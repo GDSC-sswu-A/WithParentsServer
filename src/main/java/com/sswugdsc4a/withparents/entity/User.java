@@ -32,9 +32,11 @@ public class User implements UserDetails {
 
     private String authority;
 
-//    @ManyToOne
-//    @JoinColumn(name = "family_id")
-//    private Family family;
+    @ManyToOne
+    @JoinColumn(name = "family_id")
+    private Family family;
+
+    private Boolean isParent;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
