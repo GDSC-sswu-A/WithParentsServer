@@ -1,6 +1,6 @@
 package com.sswugdsc4a.withparents.controller;
 
-import com.sswugdsc4a.withparents.dto.Request.GoogleLoginRequest;
+import com.sswugdsc4a.withparents.dto.request.GoogleLoginRequest;
 import com.sswugdsc4a.withparents.dto.response.GoogleLoginResponse;
 import com.sswugdsc4a.withparents.service.AuthService;
 import lombok.RequiredArgsConstructor;
