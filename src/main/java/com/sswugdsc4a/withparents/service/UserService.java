@@ -22,11 +22,13 @@ public class UserService {
     }
 
 
-    public void createUser(String email, String nickname) {
+    public void createUser(String email) {
         userRepository.save(new User(
                 null,
                 email,
-                nickname,
+                "nickname",
+                null,
+                "ROLE_USER",
                 null,
                 null
         ));

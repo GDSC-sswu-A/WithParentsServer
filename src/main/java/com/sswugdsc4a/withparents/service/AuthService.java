@@ -70,7 +70,7 @@ public class AuthService {
 
         // 신규회원이면 createUser
         if (userService.isExistingMember(email)) {
-            userService.createUser(email, "닉네임");
+            userService.createUser(email);
             return new GoogleLoginResponse(jwt, true);
         }
 
