@@ -6,6 +6,7 @@ import com.sswugdsc4a.withparents.dto.request.user.CreateFamilyRequest;
 import com.sswugdsc4a.withparents.dto.request.user.ModifyUserInfoRequest;
 import com.sswugdsc4a.withparents.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,6 +33,11 @@ public class UserController {
             @RequestBody CreateFamilyRequest body
     ){
         return userService.createFamily(body.getPassword());
+    }
+
+    @GetMapping("/api/user/getUserInfo")
+    public UserDTO getUserInfo(){
+        return UserDTO.entityToDTO(userService.getUser());
     }
 
 }
