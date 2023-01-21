@@ -33,7 +33,7 @@ public class AuthController {
     public GoogleLoginResponse googleLogin(
             @RequestBody GoogleLoginRequest body
     ) throws GeneralSecurityException, IOException {
-        return authService.googleLogin(body.getAccess_token());
+        return authService.googleLogin(body.getIdToken());
     }
 
 }
