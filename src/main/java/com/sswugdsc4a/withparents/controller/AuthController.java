@@ -1,6 +1,6 @@
 package com.sswugdsc4a.withparents.controller;
 
-import com.sswugdsc4a.withparents.dto.Request.GoogleLoginRequest;
+import com.sswugdsc4a.withparents.dto.request.GoogleLoginRequest;
 import com.sswugdsc4a.withparents.dto.response.GoogleLoginResponse;
 import com.sswugdsc4a.withparents.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +33,7 @@ public class AuthController {
     public GoogleLoginResponse googleLogin(
             @RequestBody GoogleLoginRequest body
     ) throws GeneralSecurityException, IOException {
-        return authService.googleLogin(body.getAccess_token());
+        return authService.googleLogin(body.getIdToken());
     }
 
 }
