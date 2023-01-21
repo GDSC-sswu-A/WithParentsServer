@@ -1,6 +1,8 @@
 package com.sswugdsc4a.withparents.controller;
 
+import com.sswugdsc4a.withparents.dto.dto.user.FamilyDTO;
 import com.sswugdsc4a.withparents.dto.dto.user.UserDTO;
+import com.sswugdsc4a.withparents.dto.request.user.CreateFamilyRequest;
 import com.sswugdsc4a.withparents.dto.request.user.ModifyUserInfoRequest;
 import com.sswugdsc4a.withparents.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,13 @@ public class UserController {
                 body.getFamilyId(),
                 body.getIsParent()
         );
+    }
+
+    @PostMapping("/api/user/createFamily")
+    public FamilyDTO createFamily(
+            @RequestBody CreateFamilyRequest body
+    ){
+        return userService.createFamily(body.getPassword());
     }
 
 }

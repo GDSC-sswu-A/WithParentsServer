@@ -1,5 +1,6 @@
 package com.sswugdsc4a.withparents.service;
 
+import com.sswugdsc4a.withparents.dto.dto.user.FamilyDTO;
 import com.sswugdsc4a.withparents.dto.dto.user.UserDTO;
 import com.sswugdsc4a.withparents.entity.Family;
 import com.sswugdsc4a.withparents.entity.User;
@@ -51,6 +52,22 @@ public class UserService {
                 null,
                 null
         ));
+    }
+
+    @Transactional
+    public FamilyDTO createFamily(String password) {
+        User creator = getUser();
+
+        return FamilyDTO.entityToDTO(
+                familyRepository.save(
+                        new Family(
+                                null,
+                                password,
+                                null,
+                                creator
+                        )
+                )
+        );
     }
 
     @Transactional
