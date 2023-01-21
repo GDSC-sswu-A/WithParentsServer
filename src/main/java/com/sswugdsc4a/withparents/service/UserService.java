@@ -41,17 +41,21 @@ public class UserService {
         return userRepository.findByEmail(email).isPresent();
     }
 
-
-    public void createUser(String email) {
-        userRepository.save(new User(
-                null,
-                email,
-                "nickname",
-                null,
-                "ROLE_USER",
-                null,
-                null
-        ));
+    @Transactional
+    public UserDTO createUser(String email) {
+        return UserDTO.entityToDTO(
+                userRepository.save(
+                        new User(
+                                null,
+                                email,
+                                "nickname",
+                                null,
+                                "ROLE_USER",
+                                null,
+                                null
+                        )
+                )
+        );
     }
 
     @Transactional

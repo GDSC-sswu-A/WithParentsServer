@@ -63,7 +63,7 @@ public class AuthService {
         String jwt = jwtUtil.createJwtToken(email);
 
         // 신규회원이면 createUser
-        if (userService.isExistingMember(email)) {
+        if (!userService.isExistingMember(email)) {
             userService.createUser(email);
             return new GoogleLoginResponse(jwt);
         }
