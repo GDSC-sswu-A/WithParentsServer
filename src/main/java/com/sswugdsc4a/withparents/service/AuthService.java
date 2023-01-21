@@ -41,39 +41,33 @@ public class AuthService {
 
     }
 
-    public GoogleLoginResponse googleLogin(String access_token)
+    public GoogleLoginResponse googleLogin(String idTokenString)
             throws GeneralSecurityException, IOException {
 
-        // 토큰 무결성 인증
         HttpTransport transport = new NetHttpTransport();
         JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
-
-        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier
-                .Builder(transport, jsonFactory)
+        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
                 .setAudience(Arrays.asList(
                         propertyConfig.getGoogleClientId1(),
                         propertyConfig.getGoogleClientId2()
-                        ))
+                ))
                 .build();
 
-        GoogleIdToken idToken = verifier.verify(access_token);
-
-        if(idToken == null){
-            throw new InvalidValueException(access_token, "유효하지 않은 access token");
+        GoogleIdToken idToken = verifier.verify(idTokenString);
+        if (idToken == null) {
+            throw new InvalidValueException(idTokenString, "유효하지 않은 idToken");
         }
 
-        // 토큰에서 email 추출
         GoogleIdToken.Payload payload = idToken.getPayload();
         String email = payload.getEmail();
-
         String jwt = jwtUtil.createJwtToken(email);
 
         // 신규회원이면 createUser
         if (userService.isExistingMember(email)) {
-            userService.createUser(email, "닉네임");
-            return new GoogleLoginResponse(jwt, true);
+            userService.createUser(email);
+            return new GoogleLoginResponse(jwt);
         }
 
-        return new GoogleLoginResponse(jwt, false);
+        return new GoogleLoginResponse(jwt);
     }
 }
