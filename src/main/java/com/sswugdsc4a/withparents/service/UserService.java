@@ -32,6 +32,11 @@ public class UserService {
                 .orElseThrow(() -> new CustomException("invalid family id"));
     }
 
+    public User getUserById(Long userId){
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException("invalid user id"));
+    }
+
     public User getUserByEmail(String email){
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException("invalid email"));
