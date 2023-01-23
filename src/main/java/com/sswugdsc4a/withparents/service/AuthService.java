@@ -9,7 +9,7 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.sswugdsc4a.withparents.config.PropertyConfig;
 import com.sswugdsc4a.withparents.dto.response.GoogleLoginResponse;
 import com.sswugdsc4a.withparents.entity.User;
-import com.sswugdsc4a.withparents.exception.custion_exceptions.InvalidValueException;
+import com.sswugdsc4a.withparents.exception.CustomException;
 import com.sswugdsc4a.withparents.repository.UserRepository;
 import com.sswugdsc4a.withparents.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -31,10 +31,10 @@ public class AuthService {
     public String testLogin(String email, String pw) {
 
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new InvalidValueException(email, "email"));
+                .orElseThrow(() -> new CustomException("Invalid email or password"));
 
         if (!user.getPassword().equals(pw)) {
-            throw new InvalidValueException(pw, "비밀번호");
+            throw new CustomException("Invalid email or password");
         }
 
         return jwtUtil.createJwtToken(user.getEmail());
@@ -55,7 +55,7 @@ public class AuthService {
 
         GoogleIdToken idToken = verifier.verify(idTokenString);
         if (idToken == null) {
-            throw new InvalidValueException(idTokenString, "유효하지 않은 idToken");
+            throw new CustomException("invalid id token");
         }
 
         GoogleIdToken.Payload payload = idToken.getPayload();

@@ -4,7 +4,7 @@ import com.sswugdsc4a.withparents.dto.dto.user.FamilyDTO;
 import com.sswugdsc4a.withparents.dto.dto.user.UserDTO;
 import com.sswugdsc4a.withparents.entity.Family;
 import com.sswugdsc4a.withparents.entity.User;
-import com.sswugdsc4a.withparents.exception.custion_exceptions.InvalidValueException;
+import com.sswugdsc4a.withparents.exception.CustomException;
 import com.sswugdsc4a.withparents.repository.FamilyRepository;
 import com.sswugdsc4a.withparents.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,17 +24,17 @@ public class UserService {
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
 
         return userRepository.findById(Long.parseLong(userId))
-                .orElseThrow(() -> new InvalidValueException(userId, "존재하지 않는 user id입니다"));
+                .orElseThrow(() -> new CustomException("invalid user id"));
     }
 
     public Family getFamily(Long id){
         return familyRepository.findById(id)
-                .orElseThrow(() -> new InvalidValueException(id.toString(), "유효하지 않은 family id"));
+                .orElseThrow(() -> new CustomException("invalid family id"));
     }
 
     public User getUserByEmail(String email){
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new InvalidValueException(email, "해당 email을 가진 user가 존재하지 않음"));
+                .orElseThrow(() -> new CustomException("invalid email"));
     }
 
     public Boolean isExistingMember(String email){
