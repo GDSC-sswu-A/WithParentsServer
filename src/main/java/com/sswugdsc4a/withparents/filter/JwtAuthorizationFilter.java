@@ -2,9 +2,7 @@ package com.sswugdsc4a.withparents.filter;
 
 import com.sswugdsc4a.withparents.config.PropertyConfig;
 import com.sswugdsc4a.withparents.entity.User;
-import com.sswugdsc4a.withparents.exception.custion_exceptions.InvalidIdException;
-import com.sswugdsc4a.withparents.exception.custion_exceptions.InvalidValueException;
-import com.sswugdsc4a.withparents.exception.custion_exceptions.TokenDoesNotExistException;
+import com.sswugdsc4a.withparents.exception.CustomException;
 import com.sswugdsc4a.withparents.repository.UserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -42,7 +40,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             token = request.getHeader("jwt_token");
 
             if (token == null) {
-                throw new TokenDoesNotExistException();
+                throw new CustomException("token does not exist");
             }
 
             // jwt 토큰에서 user_id 가져오기
@@ -57,7 +55,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             Optional<User> user = userRepository.findByEmail(userId);
 
             if (user.isEmpty()) {
-                throw new InvalidValueException(userId, "userId");
+                throw new CustomException("invalid user id");
             }
 
             // Authenticaton 생성하고 SecurityContext에 설정하기
