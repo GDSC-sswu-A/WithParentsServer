@@ -41,6 +41,12 @@ public class UserService {
         return userRepository.findByEmail(email).isPresent();
     }
 
+    public Boolean areTheyAFamily(Long id){
+        return userRepository.findById(id)
+                .orElseThrow(() -> new CustomException("invalid user id")).getFamily().getId()
+                == getUser().getFamily().getId();
+    }
+
     @Transactional
     public UserDTO createUser(String email) {
         return UserDTO.entityToDTO(
