@@ -13,6 +13,7 @@ public class UserDTO {
     private String email;
     private String nickname;
     private Long familyId;
+    private String familyPassword;
     private Boolean isParent;
 
     public static UserDTO entityToDTO(User e){
@@ -20,6 +21,7 @@ public class UserDTO {
                 e.getEmail(),
                 e.getNickname(),
                 e.getFamily() == null ? null : e.getFamily().getId(),
+                e.getFamily() == null ? null : e.getFamily().getPassword(),
                 e.getIsParent()
         );
     }
