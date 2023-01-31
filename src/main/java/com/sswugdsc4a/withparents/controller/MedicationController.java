@@ -5,10 +5,7 @@ import com.sswugdsc4a.withparents.dto.dto.medication.MedicationDTO;
 import com.sswugdsc4a.withparents.dto.request.medication.ModifyMedicationRequest;
 import com.sswugdsc4a.withparents.service.MedicationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalTime;
 
@@ -41,5 +38,14 @@ public class MedicationController {
                 body.getDosingTime()
         );
     }
+
+    @DeleteMapping("/api/medication/deleteMedication")
+    public void deleteMedication(
+            @RequestParam Long medicationId
+    ){
+        medicationService.deleteMedication(medicationId);
+    }
+
+
 
 }

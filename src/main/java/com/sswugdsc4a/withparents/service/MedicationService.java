@@ -78,4 +78,19 @@ public class MedicationService {
         return MedicationDTO.entityToDto(medication);
 
     }
+
+    @Transactional
+    public void deleteMedication(
+            Long medicationId
+    ) {
+
+        Medication medication = medicationRepository.findById(medicationId)
+                .orElseThrow(() -> new CustomException("invalid medication id"));
+
+        if (!userService.areTheyAFamily(medication.getUser().getId())) {
+            throw new CustomException("Family id is different");
+        }
+
+        medicationRepository.delete(medication);
+    }
 }
