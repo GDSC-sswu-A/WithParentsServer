@@ -9,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -105,6 +107,35 @@ public class MedicationService {
 
         return medicationRepository.findAllByUserId(userId)
                 .stream()
+                .map(e -> MedicationDTO.entityToDto(e))
+                .collect(Collectors.toList());
+
+    }
+
+    public List<MedicationDTO> getTodayMedicationList(Long userId) {
+
+        User user = userService.getUserById(userId);
+
+        if (!userService.areTheyAFamily(userId)) {
+            throw new CustomException("Family id is different");
+        }
+
+        int dayOfWeekNumber = switch (Calendar.getInstance().get(Calendar.DAY_OF_WEEK)) {
+            case 1 -> 6; // sun
+            case 2 -> 0; // mon
+            case 3 -> 1; // tue
+            case 4 -> 2; // wed
+            case 5 -> 3; // thu
+            case 6 -> 4; // fri
+            case 7 -> 5; // sat
+            default -> 8; // ???
+        };
+
+        return medicationRepository.findAllByUserId(userId)
+                .stream()
+                .filter(e -> {
+                    return e.getDayOfTheWeekList().charAt(dayOfWeekNumber) == '1';
+                })
                 .map(e -> MedicationDTO.entityToDto(e))
                 .collect(Collectors.toList());
 

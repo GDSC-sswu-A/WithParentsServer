@@ -54,6 +54,11 @@ public class MedicationController {
         return medicationService.getMedicationList(userId);
     }
 
-
+    @GetMapping("/api/medication/getTodayMedicationList")
+    public List<MedicationDTO> getTodayMedicationList(
+            @RequestParam Long userId
+    ){
+        return medicationService.getTodayMedicationList(userId);
+    }
 
 }
