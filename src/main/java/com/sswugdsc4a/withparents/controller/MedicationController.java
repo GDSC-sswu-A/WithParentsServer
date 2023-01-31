@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalTime;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -44,6 +45,13 @@ public class MedicationController {
             @RequestParam Long medicationId
     ){
         medicationService.deleteMedication(medicationId);
+    }
+
+    @GetMapping("/api/medication/getMedicationList")
+    public List<MedicationDTO> getMedicationList(
+            @RequestParam Long userId
+    ){
+        return medicationService.getMedicationList(userId);
     }
 
 
