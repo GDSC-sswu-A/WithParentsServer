@@ -24,6 +24,7 @@ public class UserController {
         return userService.modifyUserInfo(
                 body.getNickname(),
                 body.getFamilyId(),
+                body.getFamilyPassword(),
                 body.getIsParent()
         );
     }

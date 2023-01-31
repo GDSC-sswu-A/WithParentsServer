@@ -47,9 +47,12 @@ public class UserService {
     }
 
     public Boolean areTheyAFamily(Long id){
-        return userRepository.findById(id)
-                .orElseThrow(() -> new CustomException("invalid user id")).getFamily().getId()
-                == getUser().getFamily().getId();
+
+        if (getUserById(id).getFamily() == null || getUser().getFamily() == null) {
+            return false;
+        }
+
+        return getUserById(id).getFamily().getId() == getUser().getFamily().getId();
     }
 
     @Transactional
@@ -89,6 +92,7 @@ public class UserService {
     public UserDTO modifyUserInfo(
             String nickname,
             Long familyId,
+            String familyPassword,
             Boolean isParent) {
 
         User user = getUser();
@@ -98,6 +102,15 @@ public class UserService {
         }
 
         if(familyId != null) {
+
+            if (familyPassword == null) {
+                throw new CustomException("Family password does not exist");
+            }
+
+            if (!getFamily(familyId).getPassword().equals(familyPassword)) {
+                throw new CustomException("Invalid Family Password");
+            }
+
             user.setFamily(getFamily(familyId));
         }
 
