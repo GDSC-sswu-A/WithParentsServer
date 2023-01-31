@@ -48,7 +48,7 @@ public class UserService {
 
     public Boolean areTheyAFamily(Long id){
 
-        if (getUserById(id).getFamily() == null) {
+        if (getUserById(id).getFamily() == null || getUser().getFamily() == null) {
             return false;
         }
 
