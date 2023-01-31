@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -42,6 +44,38 @@ public class MedicationService {
                 )
         );
 
+
+    }
+
+    @Transactional
+    public MedicationDTO modifyMedication(
+            Long medicationId,
+            String description,
+            String dayOfTheWeekList,
+            LocalTime dosingTime
+    ) {
+
+        Medication medication = medicationRepository.findById(medicationId)
+                .orElseThrow(() -> new CustomException("invalid medication id"));
+
+
+        if (!userService.areTheyAFamily(medication.getUser().getId())) {
+            throw new CustomException("Family id is different");
+        }
+
+        if (description != null) {
+            medication.setDescription(description);
+        }
+
+        if (dayOfTheWeekList != null) {
+            medication.setDayOfTheWeekList(dayOfTheWeekList);
+        }
+
+        if (dosingTime != null) {
+            medication.setDosingTime(dosingTime);
+        }
+
+        return MedicationDTO.entityToDto(medication);
 
     }
 }
