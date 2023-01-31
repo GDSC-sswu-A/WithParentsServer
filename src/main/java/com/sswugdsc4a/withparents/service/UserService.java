@@ -47,9 +47,12 @@ public class UserService {
     }
 
     public Boolean areTheyAFamily(Long id){
-        return userRepository.findById(id)
-                .orElseThrow(() -> new CustomException("invalid user id")).getFamily().getId()
-                == getUser().getFamily().getId();
+
+        if (getUserById(id).getFamily() == null || getUser().getFamily() == null) {
+            return false;
+        }
+
+        return getUserById(id).getFamily().getId() == getUser().getFamily().getId();
     }
 
     @Transactional
