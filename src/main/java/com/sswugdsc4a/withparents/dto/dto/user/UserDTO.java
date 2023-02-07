@@ -10,6 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserDTO {
 
+    private long userId;
     private String email;
     private String nickname;
     private Long familyId;
@@ -18,6 +19,7 @@ public class UserDTO {
 
     public static UserDTO entityToDTO(User e){
         return new UserDTO(
+                e.getId(),
                 e.getEmail(),
                 e.getNickname(),
                 e.getFamily() == null ? null : e.getFamily().getId(),

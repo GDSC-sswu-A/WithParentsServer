@@ -1,13 +1,12 @@
 package com.sswugdsc4a.withparents.controller;
 
-import com.sswugdsc4a.withparents.dto.Request.medication.CreateMedicationRequest;
+import com.sswugdsc4a.withparents.dto.request.medication.CreateMedicationRequest;
 import com.sswugdsc4a.withparents.dto.dto.medication.MedicationDTO;
 import com.sswugdsc4a.withparents.dto.request.medication.ModifyMedicationRequest;
 import com.sswugdsc4a.withparents.service.MedicationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalTime;
 import java.util.List;
 
 @RestController

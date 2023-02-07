@@ -1,4 +1,4 @@
-package com.sswugdsc4a.withparents.dto.Request.medication;
+package com.sswugdsc4a.withparents.dto.request.medication;
 
 import lombok.Getter;
 
