@@ -61,6 +61,18 @@ public class ScheduleService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
+    public void deleteSchedule(
+            Long scheduleId
+    ){
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(()->new CustomException("invalid schedule id"));
+        if (!userService.areTheyAFamily(schedule.getUser().getId())){
+            throw new CustomException("Family id is different");
+        }
+        scheduleRepository.delete(schedule);
+    }
+
 //    public List<ScheduleDTO> getTodayScheduleList(Long userId){
 //        User user = UserRepository.findById(userId)
 //                .orElseThrow(()->new IllegalArgumentException());
