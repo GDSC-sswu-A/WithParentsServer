@@ -2,6 +2,7 @@ package com.sswugdsc4a.withparents.service;
 
 import com.sswugdsc4a.withparents.dto.dto.user.FamilyDTO;
 import com.sswugdsc4a.withparents.dto.dto.user.LocationInfoDTO;
+import com.sswugdsc4a.withparents.dto.dto.user.SimpleUserInfoDTO;
 import com.sswugdsc4a.withparents.dto.dto.user.UserDTO;
 import com.sswugdsc4a.withparents.entity.Family;
 import com.sswugdsc4a.withparents.entity.LocationInfo;
@@ -15,6 +16,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -156,4 +159,20 @@ public class UserService {
         return LocationInfoDTO.entityToDTO(locationInfo);
 
     }
+
+    public List<SimpleUserInfoDTO> getFamilyMemberList(){
+
+        User user = getUser();
+
+        if (user.getFamily() == null) {
+            throw new CustomException("Family id does not exist");
+        }
+
+        return userRepository.findAllByFamilyId(user.getFamily().getId())
+                .stream()
+                .map(e -> new SimpleUserInfoDTO(e.getId(), e.getNickname()))
+                .collect(Collectors.toList());
+
+    }
+
 }

@@ -2,6 +2,7 @@ package com.sswugdsc4a.withparents.controller;
 
 import com.sswugdsc4a.withparents.dto.dto.user.FamilyDTO;
 import com.sswugdsc4a.withparents.dto.dto.user.LocationInfoDTO;
+import com.sswugdsc4a.withparents.dto.dto.user.SimpleUserInfoDTO;
 import com.sswugdsc4a.withparents.dto.dto.user.UserDTO;
 import com.sswugdsc4a.withparents.dto.request.user.CreateFamilyRequest;
 import com.sswugdsc4a.withparents.dto.request.user.ModifyUserInfoRequest;
@@ -9,6 +10,8 @@ import com.sswugdsc4a.withparents.dto.request.user.SetLocationInfoRequest;
 import com.sswugdsc4a.withparents.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -52,6 +55,11 @@ public class UserController {
             @RequestParam Long userId
     ){
         return userService.getLocationInfo(userId);
+    }
+
+    @GetMapping("/api/user/getFamilyMemberList")
+    public List<SimpleUserInfoDTO> getFamilyMemberIdList(){
+        return userService.getFamilyMemberList();
     }
 
 }
