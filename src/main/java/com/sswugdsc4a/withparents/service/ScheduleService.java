@@ -62,9 +62,10 @@ public class ScheduleService {
     }
 
     public List<ScheduleDTO> getScheduleList(Long userId){
-        User user = UserRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException());
-
+        User user = userService.getUserById(userId);
+        if(!userService.areTheyAFamily(userId)) {
+            throw new CustomException("Family id is different");
+        }
         return scheduleRepository.findAllByScheduleId(userId)
                 .stream()
                 .map(e -> ScheduleDTO.entityToDTO(e))
@@ -75,27 +76,26 @@ public class ScheduleService {
 //        User user = UserRepository.findById(userId)
 //                .orElseThrow(()->new IllegalArgumentException());
 //    }
-    public List<ScheduleDTO> getTodayScheduleList(Long userId){
-        User user = userService.getUserById(userId);
-
-        if(!userService.areTheyAFamily(userId)){
-            throw new CustomException("Family id is different");
-        }
-        int dayOfWeekNumber = switch (Calendar.getInstance().get(Calendar.D)){
-            case 1 -> 6;
-            case 2 -> 0;
-            case 3 -> 1;
-            case 4 -> 2;
-            case 5 -> 3;
-            case 6 -> 4;
-            case 7 -> 5;
-            default -> 8;
-        };
-        return scheduleRepository.findAllByUserId(userId)
-                .stream()
-                .filter(e -> {
-                    return e.get
-                })
+//    public List<ScheduleDTO> getTodayScheduleList(Long userId){
+//        User user = userService.getUserById(userId);
+//
+//        if(!userService.areTheyAFamily(userId)){
+//            throw new CustomException("Family id is different");
+//        }
+//        int dayOfWeekNumber = switch (Calendar.getInstance().get(Calendar.D)){
+//            case 1 -> 6;
+//            case 2 -> 0;
+//            case 3 -> 1;
+//            case 4 -> 2;
+//            case 5 -> 3;
+//            case 6 -> 4;
+//            case 7 -> 5;
+//            default -> 8;
+//        };
+//        return scheduleRepository.findAllByUserId(userId)
+//                .stream()
+//                .filter(e -> {
+//                    return e.get
+//                })
     }
-}
 
