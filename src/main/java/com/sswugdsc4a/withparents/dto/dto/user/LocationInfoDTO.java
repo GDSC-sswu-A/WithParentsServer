@@ -5,17 +5,21 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @AllArgsConstructor
 public class LocationInfoDTO {
 
     private Long userId;
+    private LocalDateTime lastModifiedDate;
     private String locationInfo;
 
-    public LocationInfoDTO entityToDTO(LocationInfo e){
+    public static LocationInfoDTO entityToDTO(LocationInfo e){
         return new LocationInfoDTO(
                 e.getUserId(),
+                e.getLastModifiedDate(),
                 e.getLocationInfo()
         );
     }
