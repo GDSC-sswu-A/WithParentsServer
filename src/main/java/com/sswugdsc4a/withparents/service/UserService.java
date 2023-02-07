@@ -140,4 +140,20 @@ public class UserService {
         );
 
     }
+
+    public LocationInfoDTO getLocationInfo(Long userId) {
+
+        if (!areTheyAFamily(userId)) {
+            throw new CustomException("Family id is different");
+        }
+
+        LocationInfo locationInfo = locationInfoRepository.findById(userId).orElse(null);
+
+        if (locationInfo == null) {
+            return null;
+        }
+
+        return LocationInfoDTO.entityToDTO(locationInfo);
+
+    }
 }
