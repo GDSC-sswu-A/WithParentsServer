@@ -49,24 +49,13 @@ public class ScheduleService {
         );
 
     }
-    @Transactional
-    public void deleteSchedule(
-            Long scheduleId
-    ){
-        Schedule schedule = scheduleRepository.findById(scheduleId)
-                .orElseThrow(() -> new CustomException("invaild schedule id"));
-        if(!userService.areTheyAFamily(schedule.getUser().getId())){
-            throw new CustomException("Family id is different");
-        }
-        scheduleRepository.delete(schedule);
-    }
 
     public List<ScheduleDTO> getScheduleList(Long userId){
         User user = userService.getUserById(userId);
         if(!userService.areTheyAFamily(userId)) {
             throw new CustomException("Family id is different");
         }
-        return scheduleRepository.findAllByScheduleId(userId)
+        return scheduleRepository.findAllByUserId(userId)
                 .stream()
                 .map(e -> ScheduleDTO.entityToDTO(e))
                 .collect(Collectors.toList());

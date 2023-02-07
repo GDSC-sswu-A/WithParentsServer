@@ -31,11 +31,4 @@ public class ScheduleController {
     ) {
         return scheduleService.getScheduleList(userId);
     }
-
-    @DeleteMapping("/api/schedule/deleteSchedule")
-    public void deleteSchedule(
-            @RequestParam Long scheduleId
-    ){
-        scheduleService.deleteSchedule(scheduleId);
-    }
 };
