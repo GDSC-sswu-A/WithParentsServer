@@ -1,11 +1,14 @@
 package com.sswugdsc4a.withparents.service;
 
 import com.sswugdsc4a.withparents.dto.dto.user.FamilyDTO;
+import com.sswugdsc4a.withparents.dto.dto.user.LocationInfoDTO;
 import com.sswugdsc4a.withparents.dto.dto.user.UserDTO;
 import com.sswugdsc4a.withparents.entity.Family;
+import com.sswugdsc4a.withparents.entity.LocationInfo;
 import com.sswugdsc4a.withparents.entity.User;
 import com.sswugdsc4a.withparents.exception.CustomException;
 import com.sswugdsc4a.withparents.repository.FamilyRepository;
+import com.sswugdsc4a.withparents.repository.LocationInfoRepository;
 import com.sswugdsc4a.withparents.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +22,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final FamilyRepository familyRepository;
+    private final LocationInfoRepository locationInfoRepository;
 
     public User getUser(){
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -119,5 +123,21 @@ public class UserService {
         }
 
         return UserDTO.entityToDTO(user);
+    }
+
+    public LocationInfoDTO setLocationInfo(
+            String locationInfo
+    ) {
+
+        return LocationInfoDTO.entityToDTO(
+                locationInfoRepository.save(
+                        new LocationInfo(
+                                getUser().getId(),
+                                null,
+                                locationInfo
+                        )
+                )
+        );
+
     }
 }
