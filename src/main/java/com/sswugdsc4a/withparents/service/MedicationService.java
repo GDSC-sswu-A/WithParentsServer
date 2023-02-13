@@ -74,9 +74,19 @@ public class MedicationService {
             medication.setDayOfTheWeekList(dayOfTheWeekList);
         }
 
-//        if (dosingTime != null) {
-//            medication.setDosingTime(dosingTime);
-//        }
+        if (dosingTimeList != null) {
+            medication.setDosingTimeList(
+                    dosingTimeList
+                            .stream()
+                            .map(t -> {return new MedicationDosingTime(t);})
+                            .collect(Collectors.toList()
+                            )
+            );
+        }
+
+        if (notificationStatus != null) {
+            medication.setNotificationStatus(notificationStatus);
+        }
 
         return MedicationDTO.entityToDto(medication);
 
