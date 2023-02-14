@@ -47,7 +47,9 @@ public class UserController {
     public LocationInfoDTO setLocationInfo(
             @RequestBody SetLocationInfoRequest body
             ){
-        return userService.setLocationInfo(body.getLocationInfo());
+        return userService.setLocationInfo(
+                body.getLatitude(),
+                body.getLatitude());
     }
 
     @GetMapping("/api/user/getLocationInfo")

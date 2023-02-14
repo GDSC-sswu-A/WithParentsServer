@@ -129,7 +129,8 @@ public class UserService {
     }
 
     public LocationInfoDTO setLocationInfo(
-            String locationInfo
+            String latitude,
+            String longitude
     ) {
 
         return LocationInfoDTO.entityToDTO(
@@ -137,7 +138,8 @@ public class UserService {
                         new LocationInfo(
                                 getUser().getId(),
                                 null,
-                                locationInfo
+                                latitude,
+                                longitude
                         )
                 )
         );

@@ -4,5 +4,6 @@ import lombok.Getter;
 
 @Getter
 public class SetLocationInfoRequest {
-    private String locationInfo;
+    private String latitude;
+    private String longitude;
 }
