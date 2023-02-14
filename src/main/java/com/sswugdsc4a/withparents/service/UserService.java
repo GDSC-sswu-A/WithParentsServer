@@ -1,9 +1,6 @@
 package com.sswugdsc4a.withparents.service;
 
-import com.sswugdsc4a.withparents.dto.dto.user.FamilyDTO;
-import com.sswugdsc4a.withparents.dto.dto.user.LocationInfoDTO;
-import com.sswugdsc4a.withparents.dto.dto.user.SimpleUserInfoDTO;
-import com.sswugdsc4a.withparents.dto.dto.user.UserDTO;
+import com.sswugdsc4a.withparents.dto.dto.user.*;
 import com.sswugdsc4a.withparents.entity.Family;
 import com.sswugdsc4a.withparents.entity.LocationInfo;
 import com.sswugdsc4a.withparents.entity.User;
@@ -129,7 +126,8 @@ public class UserService {
     }
 
     public LocationInfoDTO setLocationInfo(
-            String locationInfo
+            String latitude,
+            String longitude
     ) {
 
         return LocationInfoDTO.entityToDTO(
@@ -137,27 +135,47 @@ public class UserService {
                         new LocationInfo(
                                 getUser().getId(),
                                 null,
-                                locationInfo
+                                latitude,
+                                longitude
                         )
                 )
         );
 
     }
 
-    public LocationInfoDTO getLocationInfo(Long userId) {
+    public List<LocationAndNicknameDTO> getLocationInfo() {
 
-        if (!areTheyAFamily(userId)) {
-            throw new CustomException("Family id is different");
+        User user = getUser();
+
+        if (user.getFamily() == null) {
+            throw new CustomException("Family id does not exist");
         }
 
-        LocationInfo locationInfo = locationInfoRepository.findById(userId).orElse(null);
+        List<User> parents = userRepository.getParents(user.getFamily().getId());
 
-        if (locationInfo == null) {
-            return null;
-        }
+        return parents
+                .stream()
+                .map(p -> {
+                    LocationInfo locationInfo = locationInfoRepository.findById(p.getId()).orElse(null);
 
-        return LocationInfoDTO.entityToDTO(locationInfo);
+                    if (locationInfo == null) {
+                        return new LocationAndNicknameDTO(
+                                p.getId(),
+                                p.getNickname(),
+                                null,
+                                null
+                        );
+                    }
 
+                    return new LocationAndNicknameDTO(
+                            p.getId(),
+                            p.getNickname(),
+                            locationInfo.getLatitude(),
+                            locationInfo.getLongitude()
+                    );
+
+                })
+                .collect(Collectors.toList());
     }
 
     public List<SimpleUserInfoDTO> getFamilyMemberList(){
