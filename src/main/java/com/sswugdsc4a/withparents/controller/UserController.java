@@ -62,4 +62,9 @@ public class UserController {
         return userService.getFamilyMemberList();
     }
 
+    @GetMapping("/api/user/getHomeInfo")
+    public HomeInfoDTO getHomeInfo(){
+        return userService.getHomeInfo();
+    }
+
 }

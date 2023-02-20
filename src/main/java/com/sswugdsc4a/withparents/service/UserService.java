@@ -1,5 +1,6 @@
 package com.sswugdsc4a.withparents.service;
 
+import com.sswugdsc4a.withparents.dto.dto.medication.MedicationDTO;
 import com.sswugdsc4a.withparents.dto.dto.user.*;
 import com.sswugdsc4a.withparents.entity.Family;
 import com.sswugdsc4a.withparents.entity.LocationInfo;
@@ -7,12 +8,14 @@ import com.sswugdsc4a.withparents.entity.User;
 import com.sswugdsc4a.withparents.exception.CustomException;
 import com.sswugdsc4a.withparents.repository.FamilyRepository;
 import com.sswugdsc4a.withparents.repository.LocationInfoRepository;
+import com.sswugdsc4a.withparents.repository.MedicationRepository;
 import com.sswugdsc4a.withparents.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +26,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final FamilyRepository familyRepository;
     private final LocationInfoRepository locationInfoRepository;
+    private final MedicationRepository medicationRepository;
 
     public User getUser(){
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -193,4 +197,36 @@ public class UserService {
 
     }
 
+    public HomeInfoDTO getHomeInfo() {
+
+        HomeInfoDTO response = new HomeInfoDTO();
+        response.setUserList(getFamilyMemberList());
+        response.setTodayMedicationList(getTodayMedicationList());
+
+        // TODO: 오늘의 일정, 최신 포스팅 추가
+
+        return response;
+
+    }
+
+    private List<MedicationDTO> getTodayMedicationList(){
+        int dayOfWeekNumber = switch (Calendar.getInstance().get(Calendar.DAY_OF_WEEK)) {
+            case 1 -> 6; // sun
+            case 2 -> 0; // mon
+            case 3 -> 1; // tue
+            case 4 -> 2; // wed
+            case 5 -> 3; // thu
+            case 6 -> 4; // fri
+            case 7 -> 5; // sat
+            default -> 8; // ???
+        };
+
+        return medicationRepository.findAllByUserId(getUser().getId())
+                .stream()
+                .filter(e -> {
+                    return e.getDayOfTheWeekList().charAt(dayOfWeekNumber) == '1';
+                })
+                .map(e -> MedicationDTO.entityToDto(e))
+                .collect(Collectors.toList());
+    }
 }
