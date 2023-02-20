@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 
+import javax.management.Notification;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -31,5 +32,6 @@ public class Schedule{
     private String title;
     private LocalDate date;
     private LocalTime time;
+    private AlertStatus alert;
 };
 

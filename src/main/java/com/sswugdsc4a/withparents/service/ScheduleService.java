@@ -1,6 +1,7 @@
 package com.sswugdsc4a.withparents.service;
 
 import com.sswugdsc4a.withparents.dto.dto.schedule.ScheduleDTO;
+import com.sswugdsc4a.withparents.entity.AlertStatus;
 import com.sswugdsc4a.withparents.entity.Schedule;
 import com.sswugdsc4a.withparents.entity.User;
 import com.sswugdsc4a.withparents.exception.CustomException;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Calendar;
@@ -42,7 +44,8 @@ public class ScheduleService {
                                 null,
                                 title,
                                 date,
-                                time
+                                time,
+                                AlertStatus.ON
                         )
 
                 )
@@ -50,8 +53,14 @@ public class ScheduleService {
 
     }
 
-    public List<ScheduleDTO> getScheduleList(Long userId){
+    public List<ScheduleDTO> getScheduleList(
+            Long userId,
+            LocalDate date
+    )
+    {
+
         User user = userService.getUserById(userId);
+
         if(!userService.areTheyAFamily(userId)) {
             throw new CustomException("Family id is different");
         }
