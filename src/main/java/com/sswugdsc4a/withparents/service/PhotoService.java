@@ -29,6 +29,7 @@ public class PhotoService {
                 photoRepository.save(new Photo(
                         null,
                         user,
+                        user.getFamily(),
                         imageUrl,
                         description,
                         null
