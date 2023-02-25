@@ -2,10 +2,12 @@ package com.sswugdsc4a.withparents.service;
 
 import com.sswugdsc4a.withparents.dto.dto.user.*;
 import com.sswugdsc4a.withparents.entity.Family;
+import com.sswugdsc4a.withparents.entity.LastApiCallTime;
 import com.sswugdsc4a.withparents.entity.LocationInfo;
 import com.sswugdsc4a.withparents.entity.User;
 import com.sswugdsc4a.withparents.exception.CustomException;
 import com.sswugdsc4a.withparents.repository.FamilyRepository;
+import com.sswugdsc4a.withparents.repository.LastApiCallTimeRepository;
 import com.sswugdsc4a.withparents.repository.LocationInfoRepository;
 import com.sswugdsc4a.withparents.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final FamilyRepository familyRepository;
     private final LocationInfoRepository locationInfoRepository;
+    private final LastApiCallTimeRepository lastApiCallTimeRepository;
 
     public User getUser(){
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -193,4 +196,19 @@ public class UserService {
 
     }
 
+    public List<LastApiCallTime> getParentsLastApiCallTime() {
+
+        User user = getUser();
+
+        if (user.getFamily() == null) {
+            throw new CustomException("Family id does not exist");
+        }
+
+        return userRepository.getParents(user.getFamily().getId())
+                .stream()
+                .map(e -> lastApiCallTimeRepository.findById(e.getId())
+                        .orElse(new LastApiCallTime(e.getId(), null)))
+                .collect(Collectors.toList());
+
+    }
 }
