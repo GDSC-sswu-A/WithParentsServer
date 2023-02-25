@@ -1,22 +1,21 @@
 package com.sswugdsc4a.withparents.service;
 
+import com.sswugdsc4a.withparents.dto.dto.ScheduleDTO;
 import com.sswugdsc4a.withparents.dto.dto.medication.MedicationDTO;
+import com.sswugdsc4a.withparents.dto.dto.photo.PhotoDTO;
 import com.sswugdsc4a.withparents.dto.dto.user.*;
 import com.sswugdsc4a.withparents.entity.Family;
 import com.sswugdsc4a.withparents.entity.LastApiCallTime;
 import com.sswugdsc4a.withparents.entity.LocationInfo;
 import com.sswugdsc4a.withparents.entity.User;
 import com.sswugdsc4a.withparents.exception.CustomException;
-import com.sswugdsc4a.withparents.repository.FamilyRepository;
-import com.sswugdsc4a.withparents.repository.LastApiCallTimeRepository;
-import com.sswugdsc4a.withparents.repository.LocationInfoRepository;
-import com.sswugdsc4a.withparents.repository.MedicationRepository;
-import com.sswugdsc4a.withparents.repository.UserRepository;
+import com.sswugdsc4a.withparents.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,6 +29,8 @@ public class UserService {
     private final LocationInfoRepository locationInfoRepository;
     private final MedicationRepository medicationRepository;
     private final LastApiCallTimeRepository lastApiCallTimeRepository;
+    private final ScheduleRepository scheduleRepository;
+    private final PhotoRepository photoRepository;
 
     public User getUser(){
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -205,8 +206,8 @@ public class UserService {
         HomeInfoDTO response = new HomeInfoDTO();
         response.setUserList(getFamilyMemberList());
         response.setTodayMedicationList(getTodayMedicationList());
-
-        // TODO: 오늘의 일정, 최신 포스팅 추가
+        response.setTodayScheduleList(getTodayScheduleList());
+        response.setRecentPhotoList(getRecentPhotoList());
 
         return response;
 
@@ -233,6 +234,22 @@ public class UserService {
                 .map(e -> MedicationDTO.entityToDto(e))
                 .collect(Collectors.toList());
 
+    }
+
+    private List<ScheduleDTO> getTodayScheduleList(){
+
+        return scheduleRepository.getTodaySchedule(getUser().getFamily().getId(), LocalDate.now())
+                .stream()
+                .map(e -> {return ScheduleDTO.entityToDTO(e);})
+                .collect(Collectors.toList());
+
+    }
+
+    private List<PhotoDTO> getRecentPhotoList(){
+        return photoRepository.getRecentPhotos(getUser().getFamily().getId())
+                .stream()
+                .map(e -> PhotoDTO.entityToDto(e))
+                .collect(Collectors.toList());
     }
 
     public List<LastApiCallTime> getParentsLastApiCallTime() {

@@ -1,6 +1,8 @@
 package com.sswugdsc4a.withparents.dto.dto.user;
 
+import com.sswugdsc4a.withparents.dto.dto.ScheduleDTO;
 import com.sswugdsc4a.withparents.dto.dto.medication.MedicationDTO;
+import com.sswugdsc4a.withparents.dto.dto.photo.PhotoDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +16,7 @@ public class HomeInfoDTO {
 
     private List<SimpleUserInfoDTO> userList;
     private List<MedicationDTO> todayMedicationList;
-    // TODO: 오늘의 일정, 최신 포스팅 추가
+    private List<ScheduleDTO> todayScheduleList;
+    private List<PhotoDTO> recentPhotoList;
 
 }
