@@ -1,8 +1,10 @@
 package com.sswugdsc4a.withparents.filter;
 
 import com.sswugdsc4a.withparents.config.PropertyConfig;
+import com.sswugdsc4a.withparents.entity.LastApiCallTime;
 import com.sswugdsc4a.withparents.entity.User;
 import com.sswugdsc4a.withparents.exception.CustomException;
+import com.sswugdsc4a.withparents.repository.LastApiCallTimeRepository;
 import com.sswugdsc4a.withparents.repository.UserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -18,12 +20,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RequiredArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final UserRepository userRepository;
+    private final LastApiCallTimeRepository lastApiCallTimeRepository;
     private final PropertyConfig propertyConfig;
 
     @Override
@@ -66,6 +70,8 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            lastApiCallTimeRepository.save(new LastApiCallTime(user.get().getId(), LocalDateTime.now()));
 
         }catch (Exception e){
 
