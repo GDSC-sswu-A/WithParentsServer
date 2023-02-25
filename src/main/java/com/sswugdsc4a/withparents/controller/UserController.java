@@ -4,6 +4,7 @@ import com.sswugdsc4a.withparents.dto.dto.user.*;
 import com.sswugdsc4a.withparents.dto.request.user.CreateFamilyRequest;
 import com.sswugdsc4a.withparents.dto.request.user.ModifyUserInfoRequest;
 import com.sswugdsc4a.withparents.dto.request.user.SetLocationInfoRequest;
+import com.sswugdsc4a.withparents.entity.LastApiCallTime;
 import com.sswugdsc4a.withparents.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -60,6 +61,11 @@ public class UserController {
     @GetMapping("/api/user/getFamilyMemberList")
     public List<SimpleUserInfoDTO> getFamilyMemberIdList(){
         return userService.getFamilyMemberList();
+    }
+
+    @GetMapping("/api/user/getParentsLastApiCallTime")
+    public List<LastApiCallTime> getParentsLastApiCallTime(){
+        return userService.getParentsLastApiCallTime();
     }
 
 }
