@@ -19,13 +19,17 @@ import java.time.LocalDateTime;
 public class Photo {
 
     @Id
-    @Column(name = "family_id")
+    @Column(name = "photo_id")
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne
     @JoinColumn(name = "creator_id")
     private User creator;
+
+    @ManyToOne
+    @JoinColumn(name = "family_id")
+    private Family family;
 
     private String imageUrl;
 
