@@ -13,6 +13,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @Service
 @RequiredArgsConstructor
 public class ScheduleService {
@@ -27,7 +28,6 @@ public class ScheduleService {
             LocalTime time,
             Boolean notificationStatus
     ) {
-
         if (userService.getUser().getFamily() == null) {
             throw new CustomException("Family id does not exist");
         }
@@ -46,6 +46,36 @@ public class ScheduleService {
                         )
                 )
         );
+    }
+
+    @Transactional
+    public ScheduleDTO modifySchedule(
+            Long scheduleId,
+            String title,
+            LocalDate date,
+            LocalTime time,
+            Boolean notificationStatus
+    ){
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new CustomException("invalid schedule id"));
+
+        if (!userService.areTheyAFamily(schedule.getCreator().getId())){
+            throw new CustomException("Family id is different");
+        }
+        if(title != null){
+            schedule.setTitle(title);
+        }
+        if(date != null){
+            schedule.setDate(date);
+        }
+        if(time != null){
+            schedule.setTime(time);
+        }
+        if(notificationStatus != null){
+            schedule.setNotificationState(notificationStatus);
+        }
+        return ScheduleDTO.entityToDTO(schedule);
+
     }
 
     @Transactional

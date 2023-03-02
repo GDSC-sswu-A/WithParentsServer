@@ -1,5 +1,6 @@
 package com.sswugdsc4a.withparents.controller;
 
+import com.sswugdsc4a.withparents.dto.Request.schedule.ModifyScheduleRequest;
 import com.sswugdsc4a.withparents.dto.dto.ScheduleDTO;
 import com.sswugdsc4a.withparents.dto.request.schedule.CreateScheduleRequest;
 import com.sswugdsc4a.withparents.service.ScheduleService;
@@ -24,6 +25,19 @@ public class ScheduleController {
                 body.getNotificationStatus()
         );
     }
+    @PatchMapping("/api/schedule/modifySchedule")
+    public ScheduleDTO modifySchedule(
+            @RequestBody ModifyScheduleRequest body
+    ){
+        return scheduleService.modifySchedule(
+                body.getScheduleId(),
+                body.getTitle(),
+                body.getDate(),
+                body.getTime(),
+                body.getNotificationStatus()
+        );
+    }
+
 
     @GetMapping("/api/schedule/getScheduleList")
     public List<ScheduleDTO> getScheduleList(
