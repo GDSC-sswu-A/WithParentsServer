@@ -1,4 +1,4 @@
-package com.sswugdsc4a.withparents.dto.Request.schedule;
+package com.sswugdsc4a.withparents.dto.request.schedule;
 
 
 import lombok.Getter;

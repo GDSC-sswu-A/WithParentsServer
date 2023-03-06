@@ -1,8 +1,8 @@
 package com.sswugdsc4a.withparents.controller;
 
-import com.sswugdsc4a.withparents.dto.Request.schedule.ModifyScheduleRequest;
 import com.sswugdsc4a.withparents.dto.dto.ScheduleDTO;
 import com.sswugdsc4a.withparents.dto.request.schedule.CreateScheduleRequest;
+import com.sswugdsc4a.withparents.dto.request.schedule.ModifyScheduleRequest;
 import com.sswugdsc4a.withparents.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
