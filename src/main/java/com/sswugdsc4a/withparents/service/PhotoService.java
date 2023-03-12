@@ -8,6 +8,8 @@ import com.sswugdsc4a.withparents.repository.PhotoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
 @RequiredArgsConstructor
 public class PhotoService {
@@ -36,4 +38,19 @@ public class PhotoService {
                 ))
         );
     }
+    @Transactional
+    public void deletePhoto(
+            Long photoId
+    ){
+        Photo photo = photoRepository.findById(photoId)
+                .orElseThrow(()-> new CustomException("invaild photo id"));
+
+        if (photo.getCreator().getId() != userService.getUser().getId()){
+            throw new CustomException("Only photo creator can be deleted");
+        }
+        photoRepository.delete(photo);
+    }
 }
+
+
+
