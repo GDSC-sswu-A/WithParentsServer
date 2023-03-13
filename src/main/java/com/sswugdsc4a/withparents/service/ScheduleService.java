@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -31,7 +32,15 @@ public class ScheduleService {
         if (userService.getUser().getFamily() == null) {
             throw new CustomException("Family id does not exist");
         }
-
+        if (title.isEmpty()){
+            throw new CustomException("Please enter a title");
+        }
+        if (date == null){
+            throw new DateTimeException("Please enter the date");
+        }
+        if(time == null){
+            throw new DateTimeException("Please enter the time");
+        }
         return ScheduleDTO.entityToDTO(
                 scheduleRepository.save(
                         new Schedule(
@@ -43,8 +52,11 @@ public class ScheduleService {
                                 date,
                                 time,
                                 notificationStatus
+
                         )
+
                 )
+
         );
     }
 
@@ -106,6 +118,7 @@ public class ScheduleService {
                 .stream()
                 .map(e -> {return ScheduleDTO.entityToDTO(e);})
                 .collect(Collectors.toList());
+
     }
 
     public List<ScheduleDTO> getTodayScheduleList(){
