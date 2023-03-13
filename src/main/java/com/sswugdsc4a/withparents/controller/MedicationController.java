@@ -23,7 +23,8 @@ public class MedicationController {
                 body.getUserId(),
                 body.getDescription(),
                 body.getDayOfTheWeekList(),
-                body.getDosingTime()
+                body.getDosingTimeList(),
+                body.getNotificationStatus()
         );
     }
 
@@ -35,7 +36,8 @@ public class MedicationController {
                 body.getMedicationId(),
                 body.getDescription(),
                 body.getDayOfTheWeekList(),
-                body.getDosingTime()
+                body.getDosingTimeList(),
+                body.getNotificationStatus()
         );
     }
 

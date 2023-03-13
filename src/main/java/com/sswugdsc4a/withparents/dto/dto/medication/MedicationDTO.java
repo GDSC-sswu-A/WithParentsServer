@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -16,7 +18,8 @@ public class MedicationDTO {
     private Long userId;
     private String description;
     private String dayOfTheWeekList;
-    private LocalTime dosingTime;
+    private List<LocalTime> dosingTimes;
+    private Boolean notificationStatus;
 
     public static MedicationDTO entityToDto(Medication e){
         return new MedicationDTO(
@@ -24,7 +27,11 @@ public class MedicationDTO {
                 e.getUser().getId(),
                 e.getDescription(),
                 e.getDayOfTheWeekList(),
-                e.getDosingTime()
+                e.getDosingTimeList()
+                        .stream()
+                        .map(t -> {return t.getTime();})
+                        .collect(Collectors.toList()),
+                e.getNotificationStatus()
         );
     }
 

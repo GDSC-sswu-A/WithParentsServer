@@ -11,6 +11,7 @@ public class ModifyMedicationRequest {
     private Long medicationId;
     private String description;
     private String dayOfTheWeekList;
-    private LocalTime dosingTime;
+    private List<LocalTime> dosingTimeList;
+    private Boolean notificationStatus;;
 
 }

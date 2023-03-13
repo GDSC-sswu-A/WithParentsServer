@@ -2,6 +2,7 @@ package com.sswugdsc4a.withparents.service;
 
 import com.sswugdsc4a.withparents.dto.dto.medication.MedicationDTO;
 import com.sswugdsc4a.withparents.entity.Medication;
+import com.sswugdsc4a.withparents.entity.MedicationDosingTime;
 import com.sswugdsc4a.withparents.entity.User;
 import com.sswugdsc4a.withparents.exception.CustomException;
 import com.sswugdsc4a.withparents.repository.MedicationRepository;
@@ -26,27 +27,26 @@ public class MedicationService {
             Long userId,
             String description,
             String dayOfTheWeekList,
-            LocalTime dosingTime
+            List<LocalTime> dosingTimeList,
+            Boolean notificationStatus
     ) {
 
         if (!userService.areTheyAFamily(userId)) {
             throw new CustomException("Family id is different");
         }
 
-        return MedicationDTO.entityToDto(
-                medicationRepository.save(
-                        new Medication(
-                                null,
-                                userService.getUserById(userId),
-                                description,
-                                dayOfTheWeekList,
-                                dosingTime
-
-                        )
-                )
+        Medication medication = medicationRepository.save(
+            new Medication(
+                    null,
+                    userService.getUserById(userId),
+                    description,
+                    dayOfTheWeekList,
+                    dosingTimeList.stream().map(t -> new MedicationDosingTime(t)).collect(Collectors.toList()),
+                    notificationStatus
+            )
         );
 
-
+        return MedicationDTO.entityToDto(medication);
     }
 
     @Transactional
@@ -54,7 +54,8 @@ public class MedicationService {
             Long medicationId,
             String description,
             String dayOfTheWeekList,
-            LocalTime dosingTime
+            List<LocalTime> dosingTimeList,
+            Boolean notificationStatus
     ) {
 
         Medication medication = medicationRepository.findById(medicationId)
@@ -73,8 +74,18 @@ public class MedicationService {
             medication.setDayOfTheWeekList(dayOfTheWeekList);
         }
 
-        if (dosingTime != null) {
-            medication.setDosingTime(dosingTime);
+        if (dosingTimeList != null) {
+            medication.setDosingTimeList(
+                    dosingTimeList
+                            .stream()
+                            .map(t -> {return new MedicationDosingTime(t);})
+                            .collect(Collectors.toList()
+                            )
+            );
+        }
+
+        if (notificationStatus != null) {
+            medication.setNotificationStatus(notificationStatus);
         }
 
         return MedicationDTO.entityToDto(medication);

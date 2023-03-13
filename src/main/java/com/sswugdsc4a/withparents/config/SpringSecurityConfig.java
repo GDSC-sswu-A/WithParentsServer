@@ -1,6 +1,7 @@
 package com.sswugdsc4a.withparents.config;
 
 import com.sswugdsc4a.withparents.filter.JwtAuthorizationFilter;
+import com.sswugdsc4a.withparents.repository.LastApiCallTimeRepository;
 import com.sswugdsc4a.withparents.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -19,6 +20,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final PropertyConfig propertyConfig;
     private final UserRepository userRepository;
+    private final LastApiCallTimeRepository lastApiCallTimeRepository;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -32,7 +34,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
         // jwt 필터 추가
         http.addFilterAfter(
-                new JwtAuthorizationFilter(userRepository, propertyConfig),
+                new JwtAuthorizationFilter(userRepository, lastApiCallTimeRepository, propertyConfig),
                 BasicAuthenticationFilter.class
         );
 

@@ -25,6 +25,8 @@ public class LocationInfo {
     @LastModifiedDate
     private LocalDateTime lastModifiedDate;
 
-    private String locationInfo;
+    private String latitude;
+
+    private String longitude;
 
 }

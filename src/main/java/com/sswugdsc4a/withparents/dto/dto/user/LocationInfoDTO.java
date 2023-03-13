@@ -14,13 +14,15 @@ public class LocationInfoDTO {
 
     private Long userId;
     private LocalDateTime lastModifiedDate;
-    private String locationInfo;
+    private String latitude;
+    private String longitude;
 
     public static LocationInfoDTO entityToDTO(LocationInfo e){
         return new LocationInfoDTO(
                 e.getUserId(),
                 e.getLastModifiedDate(),
-                e.getLocationInfo()
+                e.getLatitude(),
+                e.getLongitude()
         );
     }
 
