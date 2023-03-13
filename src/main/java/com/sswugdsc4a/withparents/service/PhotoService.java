@@ -38,6 +38,27 @@ public class PhotoService {
                 ))
         );
     }
+
+    @Transactional
+    public PhotoDTO modifyPhoto(
+            Long photoId,
+            String imageUrl,
+            String description
+    ){
+        Photo photo = photoRepository.findById(photoId)
+                .orElseThrow(()-> new CustomException("invaild photo id"));
+        if(!userService.areTheyAFamily(photo.getCreator().getId())){
+            throw new CustomException("Family id is different");
+        }
+        if(imageUrl != null){
+            photo.setImageUrl(imageUrl);
+        }
+        if(description != null){
+            photo.setDescription(description);
+        }
+        return PhotoDTO.entityToDto(photo);
+    }
+
     @Transactional
     public void deletePhoto(
             Long photoId
@@ -50,6 +71,7 @@ public class PhotoService {
         }
         photoRepository.delete(photo);
     }
+
 }
 
 
