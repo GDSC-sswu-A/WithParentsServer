@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class UploadPhotoRequest {
-
+    private Long familyId;
     private String imageUrl;
     private String description;
 
