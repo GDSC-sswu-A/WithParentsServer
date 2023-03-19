@@ -51,8 +51,8 @@ public class ScheduleService {
                                 title,
                                 date,
                                 time,
-                                notificationStatus
-
+                                notificationStatus,
+                                null
                         )
 
                 )

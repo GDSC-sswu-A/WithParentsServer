@@ -37,4 +37,5 @@ public class Schedule{
     private LocalDate date;
     private LocalTime time;
     private Boolean notificationState;
+    private String nickname;
 }
