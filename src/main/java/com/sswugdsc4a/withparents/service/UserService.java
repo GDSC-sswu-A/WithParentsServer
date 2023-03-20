@@ -1,21 +1,22 @@
 package com.sswugdsc4a.withparents.service;
 
-import com.sswugdsc4a.withparents.dto.dto.user.FamilyDTO;
-import com.sswugdsc4a.withparents.dto.dto.user.LocationInfoDTO;
-import com.sswugdsc4a.withparents.dto.dto.user.SimpleUserInfoDTO;
-import com.sswugdsc4a.withparents.dto.dto.user.UserDTO;
+import com.sswugdsc4a.withparents.dto.dto.ScheduleDTO;
+import com.sswugdsc4a.withparents.dto.dto.medication.MedicationDTO;
+import com.sswugdsc4a.withparents.dto.dto.photo.PhotoDTO;
+import com.sswugdsc4a.withparents.dto.dto.user.*;
 import com.sswugdsc4a.withparents.entity.Family;
+import com.sswugdsc4a.withparents.entity.LastApiCallTime;
 import com.sswugdsc4a.withparents.entity.LocationInfo;
 import com.sswugdsc4a.withparents.entity.User;
 import com.sswugdsc4a.withparents.exception.CustomException;
-import com.sswugdsc4a.withparents.repository.FamilyRepository;
-import com.sswugdsc4a.withparents.repository.LocationInfoRepository;
-import com.sswugdsc4a.withparents.repository.UserRepository;
+import com.sswugdsc4a.withparents.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +27,10 @@ public class UserService {
     private final UserRepository userRepository;
     private final FamilyRepository familyRepository;
     private final LocationInfoRepository locationInfoRepository;
+    private final MedicationRepository medicationRepository;
+    private final LastApiCallTimeRepository lastApiCallTimeRepository;
+    private final ScheduleRepository scheduleRepository;
+    private final PhotoRepository photoRepository;
 
     public User getUser(){
         String userId = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -129,7 +134,8 @@ public class UserService {
     }
 
     public LocationInfoDTO setLocationInfo(
-            String locationInfo
+            String latitude,
+            String longitude
     ) {
 
         return LocationInfoDTO.entityToDTO(
@@ -137,27 +143,47 @@ public class UserService {
                         new LocationInfo(
                                 getUser().getId(),
                                 null,
-                                locationInfo
+                                latitude,
+                                longitude
                         )
                 )
         );
 
     }
 
-    public LocationInfoDTO getLocationInfo(Long userId) {
+    public List<LocationAndNicknameDTO> getLocationInfo() {
 
-        if (!areTheyAFamily(userId)) {
-            throw new CustomException("Family id is different");
+        User user = getUser();
+
+        if (user.getFamily() == null) {
+            throw new CustomException("Family id does not exist");
         }
 
-        LocationInfo locationInfo = locationInfoRepository.findById(userId).orElse(null);
+        List<User> parents = userRepository.getParents(user.getFamily().getId());
 
-        if (locationInfo == null) {
-            return null;
-        }
+        return parents
+                .stream()
+                .map(p -> {
+                    LocationInfo locationInfo = locationInfoRepository.findById(p.getId()).orElse(null);
 
-        return LocationInfoDTO.entityToDTO(locationInfo);
+                    if (locationInfo == null) {
+                        return new LocationAndNicknameDTO(
+                                p.getId(),
+                                p.getNickname(),
+                                null,
+                                null
+                        );
+                    }
 
+                    return new LocationAndNicknameDTO(
+                            p.getId(),
+                            p.getNickname(),
+                            locationInfo.getLatitude(),
+                            locationInfo.getLongitude()
+                    );
+
+                })
+                .collect(Collectors.toList());
     }
 
     public List<SimpleUserInfoDTO> getFamilyMemberList(){
@@ -175,4 +201,70 @@ public class UserService {
 
     }
 
+    public HomeInfoDTO getHomeInfo() {
+
+        HomeInfoDTO response = new HomeInfoDTO();
+        response.setUserList(getFamilyMemberList());
+        response.setTodayMedicationList(getTodayMedicationList());
+        response.setTodayScheduleList(getTodayScheduleList());
+        response.setRecentPhotoList(getRecentPhotoList());
+
+        return response;
+
+    }
+
+    private List<MedicationDTO> getTodayMedicationList() {
+
+        int dayOfWeekNumber = switch (Calendar.getInstance().get(Calendar.DAY_OF_WEEK)) {
+            case 1 -> 6; // sun
+            case 2 -> 0; // mon
+            case 3 -> 1; // tue
+            case 4 -> 2; // wed
+            case 5 -> 3; // thu
+            case 6 -> 4; // fri
+            case 7 -> 5; // sat
+            default -> 8; // ???
+        };
+
+        return medicationRepository.findAllByUserId(getUser().getId())
+                .stream()
+                .filter(e -> {
+                    return e.getDayOfTheWeekList().charAt(dayOfWeekNumber) == '1';
+                })
+                .map(e -> MedicationDTO.entityToDto(e))
+                .collect(Collectors.toList());
+
+    }
+
+    private List<ScheduleDTO> getTodayScheduleList(){
+
+        return scheduleRepository.getTodaySchedule(getUser().getFamily().getId(), LocalDate.now())
+                .stream()
+                .map(e -> {return ScheduleDTO.entityToDTO(e);})
+                .collect(Collectors.toList());
+
+    }
+
+    private List<PhotoDTO> getRecentPhotoList(){
+        return photoRepository.getRecentPhotos(getUser().getFamily().getId())
+                .stream()
+                .map(e -> PhotoDTO.entityToDto(e))
+                .collect(Collectors.toList());
+    }
+
+    public List<LastApiCallTime> getParentsLastApiCallTime() {
+
+        User user = getUser();
+
+        if (user.getFamily() == null) {
+            throw new CustomException("Family id does not exist");
+        }
+
+        return userRepository.getParents(user.getFamily().getId())
+                .stream()
+                .map(e -> lastApiCallTimeRepository.findById(e.getId())
+                        .orElse(new LastApiCallTime(e.getId(), null)))
+                .collect(Collectors.toList());
+
+    }
 }

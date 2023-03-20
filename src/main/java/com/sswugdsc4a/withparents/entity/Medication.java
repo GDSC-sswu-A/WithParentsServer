@@ -6,7 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -30,6 +31,10 @@ public class Medication {
     @Column(length = 7)
     private String dayOfTheWeekList;
 
-    private LocalTime dosingTime;
+    @ElementCollection
+    @CollectionTable(name = "medication_dosing_time", joinColumns = @JoinColumn(name = "medicationId"))
+    private List<MedicationDosingTime> dosingTimeList = new ArrayList<>();
+
+    private Boolean notificationStatus;
 
 }
