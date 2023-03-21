@@ -64,4 +64,18 @@ public class PhotoService {
         return PhotoDTO.entityToDto(photo);
 
     }
+
+    @Transactional
+    public void deletePhoto(Long photoId) {
+
+        Photo photo = photoRepository.findById(photoId)
+                .orElseThrow(() -> new CustomException("invalid photo id"));
+
+        if (photo.getCreator().getId() != userService.getUser().getId()) {
+            throw new CustomException("Can only be deleted by the creator");
+        }
+
+        photoRepository.delete(photo);
+
+    }
 }
