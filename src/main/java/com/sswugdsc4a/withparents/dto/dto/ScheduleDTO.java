@@ -15,6 +15,7 @@ public class ScheduleDTO {
 
     private Long id;
     private Long creatorId;
+    private String nickname;
     private String title;
     private LocalDate date;
     private LocalTime time;
@@ -24,6 +25,7 @@ public class ScheduleDTO {
         return new ScheduleDTO(
                 e.getId(),
                 e.getCreator().getId(),
+                e.getCreator().getNickname(),
                 e.getTitle(),
                 e.getDate(),
                 e.getTime(),
