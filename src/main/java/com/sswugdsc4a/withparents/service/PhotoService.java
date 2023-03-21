@@ -50,7 +50,7 @@ public class PhotoService {
                 .orElseThrow(() -> new CustomException("invalid photo id"));
 
         if (photo.getCreator().getId() != userService.getUser().getId()) {
-            throw new CustomException("Can only be deleted by the creator");
+            throw new CustomException("Can only be modified by the creator");
         }
 
         if (imageUrl != null) {
