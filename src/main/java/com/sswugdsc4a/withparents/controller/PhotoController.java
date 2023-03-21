@@ -7,6 +7,8 @@ import com.sswugdsc4a.withparents.service.PhotoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class PhotoController {
@@ -39,6 +41,11 @@ public class PhotoController {
             @RequestParam Long photoId
     ){
         photoService.deletePhoto(photoId);
+    }
+
+    @GetMapping("/api/gallery/getFamilyPhotoList")
+    public List<PhotoDTO> getFamilyPhotoList(){
+        return photoService.getFamilyPhotoList();
     }
 
 }

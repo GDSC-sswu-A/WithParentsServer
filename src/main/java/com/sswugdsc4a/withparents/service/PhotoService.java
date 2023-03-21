@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -76,6 +78,19 @@ public class PhotoService {
         }
 
         photoRepository.delete(photo);
+
+    }
+
+    public List<PhotoDTO> getFamilyPhotoList() {
+
+        if (userService.getUser().getFamily() == null) {
+            throw new CustomException("family id is required");
+        }
+
+        return photoRepository.findAllByFamilyId(userService.getUser().getFamily().getId())
+                .stream()
+                .map(PhotoDTO::entityToDto)
+                .collect(Collectors.toList());
 
     }
 }

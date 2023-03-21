@@ -13,4 +13,6 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
             , nativeQuery = true)
     List<Photo> getRecentPhotos(Long familyId);
 
+    List<Photo> findAllByFamilyId(Long familyId);
+
 }
